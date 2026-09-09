@@ -4,20 +4,13 @@ parameters:
 jobs:
 - job: CodeBuild
   pool:
-    name: SLD Build pool
+    name: SLD Build Pool - CD
   variables:
   - group: BUILD Management Resources
   - name: SolutionBaseName
     value: SFA.DAS.Payments.DataLocks
   steps:
   - template: /azure-pipelines-templates/build/step/gitversion.yml
-
-  - task: UseDotNet@2
-    displayName: Use .NET 
-    inputs: 
-      packageType: 'sdk'
-      version: 6.x
-      
 
   - task: NuGetCommand@2
     displayName: Nuget Restore
