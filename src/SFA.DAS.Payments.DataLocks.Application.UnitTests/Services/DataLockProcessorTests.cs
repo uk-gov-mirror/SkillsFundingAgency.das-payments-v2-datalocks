@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
@@ -29,6 +30,7 @@ using SFA.DAS.Payments.ServiceFabric.Core.Messaging;
 
 namespace SFA.DAS.Payments.DataLocks.Application.UnitTests.Services
 {
+
     [TestFixture]
     public class DataLockProcessorTests
     {

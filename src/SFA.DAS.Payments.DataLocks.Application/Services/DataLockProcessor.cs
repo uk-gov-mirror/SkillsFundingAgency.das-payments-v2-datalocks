@@ -1,23 +1,24 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
+using SFA.DAS.Payments.Application.Messaging;
 using SFA.DAS.Payments.DataLocks.Application.Interfaces;
+using SFA.DAS.Payments.DataLocks.Domain.Services.CourseValidation;
+using SFA.DAS.Payments.DataLocks.Domain.Services.LearnerMatching;
 using SFA.DAS.Payments.DataLocks.Messages.Events;
 using SFA.DAS.Payments.EarningEvents.Messages.Events;
+using SFA.DAS.Payments.Messages.Common.Events;
+using SFA.DAS.Payments.Model.Core;
 using SFA.DAS.Payments.Model.Core.Entities;
+using SFA.DAS.Payments.Model.Core.Incentives;
+using SFA.DAS.Payments.Model.Core.OnProgramme;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using SFA.DAS.Payments.Application.Messaging;
-using SFA.DAS.Payments.DataLocks.Domain.Services.CourseValidation;
-using SFA.DAS.Payments.DataLocks.Domain.Services.LearnerMatching;
-using SFA.DAS.Payments.Messages.Common.Events;
-using SFA.DAS.Payments.Model.Core;
-using SFA.DAS.Payments.Model.Core.Incentives;
-using SFA.DAS.Payments.Model.Core.OnProgramme;
 
 namespace SFA.DAS.Payments.DataLocks.Application.Services
 {
+
     public class DataLockProcessor : IDataLockProcessor
     {
         private readonly IMapper mapper;

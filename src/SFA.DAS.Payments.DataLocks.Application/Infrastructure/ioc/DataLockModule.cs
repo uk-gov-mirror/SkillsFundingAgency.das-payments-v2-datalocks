@@ -85,6 +85,7 @@ namespace SFA.DAS.Payments.DataLocks.Application.Infrastructure.ioc
             })).As<IFunctionalSkillValidationProcessor>().InstancePerLifetimeScope();
 
             builder.RegisterType<DataLockProcessor>().AsImplementedInterfaces().InstancePerLifetimeScope();
+            builder.RegisterType<GSLTrainingProcessor>().AsImplementedInterfaces().InstancePerLifetimeScope();
 
             builder.RegisterType<ApprenticeshipProcessor>().AsImplementedInterfaces().InstancePerLifetimeScope();
             builder.RegisterType<ApprenticeshipService>().AsImplementedInterfaces().InstancePerLifetimeScope();

@@ -9,7 +9,7 @@
     <PackageReference Include="SFA.DAS.CommitmentsV2.Messages" Version="100.0.213" />
     <PackageReference Include="SFA.DAS.CommitmentsV2.Types" Version="100.0.213" />
     <PackageReference Include="SFA.DAS.Payments.Application" Version="2.7.1-prerelease-2" />
-    <PackageReference Include="SFA.DAS.Payments.EarningEvents.Messages" Version="0.1.129" />
+    <PackageReference Include="SFA.DAS.Payments.EarningEvents.Messages" Version="2.0.15-prerelease-8" />
     <PackageReference Include="SFA.DAS.Payments.ServiceFabric.Core" Version="2.0.8" />
   </ItemGroup>
 

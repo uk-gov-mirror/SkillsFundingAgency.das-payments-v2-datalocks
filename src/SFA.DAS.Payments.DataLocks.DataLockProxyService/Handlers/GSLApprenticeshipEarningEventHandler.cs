@@ -7,40 +7,36 @@ using Microsoft.ServiceFabric.Actors.Client;
 using NServiceBus;
 using SFA.DAS.Payments.Application.Infrastructure.Logging;
 using SFA.DAS.Payments.DataLocks.DataLockService.Interfaces;
+using SFA.DAS.Payments.DataLocks.Messages.Events;
 using SFA.DAS.Payments.EarningEvents.Messages.Events;
 
 namespace SFA.DAS.Payments.DataLocks.DataLockProxyService.Handlers
 {
-
-    public class ApprenticeshipContractType1EarningEventHandler : IHandleMessages<ApprenticeshipContractType1EarningEvent>
+    public class GSLApprenticeshipEarningEventHandler: IHandleMessages<GSLApprenticeshipEarningsEvent>
     {
         private readonly IActorProxyFactory proxyFactory;
         private readonly IPaymentLogger logger;
 
-        public ApprenticeshipContractType1EarningEventHandler(IActorProxyFactory proxyFactory, IPaymentLogger logger)
+        public GSLApprenticeshipEarningEventHandler(IActorProxyFactory proxyFactory, IPaymentLogger logger)
         {
             this.proxyFactory = proxyFactory;
             this.logger = logger;
         }
 
-        public async Task Handle(ApprenticeshipContractType1EarningEvent message, IMessageHandlerContext context)
+        public async Task Handle(GSLApprenticeshipEarningsEvent message, IMessageHandlerContext context) 
         {
-            if (message.Learner == null || message.Learner?.Uln == 0)
-            {
-                throw new InvalidOperationException("Invalid 'ApprenticeshipContractType1EarningEvent' received. Learner was null or Uln was 0.");
-            }
             var uln = message.Learner.Uln;
             var learnerRef = message.Learner.ReferenceNumber;
-            logger.LogDebug($"Processing DataLockProxyProxyService event for learner with learner ref {learnerRef}");
+            logger.LogDebug($"Processing DataLockProxyProxyService event for learner with learner id {learnerRef}");
             var actorId = new ActorId(uln.ToString());
 
             logger.LogVerbose($"Creating actor proxy for learner with learner ref {learnerRef}");
             var actor = proxyFactory.CreateActorProxy<IDataLockService>(new Uri("fabric:/SFA.DAS.Payments.DataLocks.ServiceFabric/DataLockServiceActorService"), actorId);
             logger.LogDebug($"Actor proxy created for learner with " +
-                            $"JobId: {message.JobId} and LearnRefNumber: {learnerRef}");
+                            $"LearnRefNumber: {learnerRef}");
 
             logger.LogVerbose($"Calling actor proxy to handle earning for learner with learner ref {learnerRef}");
-            var dataLockEvents = await actor.HandleEarning(message, CancellationToken.None).ConfigureAwait(false);
+            var dataLockEvents = await actor.HandleGSLEarning(message, CancellationToken.None).ConfigureAwait(false);
             logger.LogDebug($"Earning handled for learner with learner ref {learnerRef}");
 
             if (dataLockEvents != null)

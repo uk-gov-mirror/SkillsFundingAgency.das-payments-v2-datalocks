@@ -13,7 +13,7 @@
 	<ItemGroup>
 		<PackageReference Include="ESFA.DC.Logging" Version="0.1.4-beta0001" />
 		<PackageReference Include="SFA.DAS.Payments.Application" Version="2.7.1-prerelease-2" />
-		<PackageReference Include="SFA.DAS.Payments.EarningEvents.Messages" Version="0.1.129" />
+		<PackageReference Include="SFA.DAS.Payments.EarningEvents.Messages" Version="2.0.15-prerelease-8" />
 		<PackageReference Include="SFA.DAS.Payments.PeriodEnd.Messages" Version="0.1.55" />
 		<PackageReference Include="SFA.DAS.Payments.ServiceFabric.Core" Version="2.0.8" />
 	</ItemGroup>

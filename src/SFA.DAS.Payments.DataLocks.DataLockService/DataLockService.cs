@@ -16,7 +16,7 @@ using SFA.DAS.Payments.DataLocks.Domain.Services.Apprenticeships;
 using SFA.DAS.Payments.DataLocks.Messages.Events;
 using SFA.DAS.Payments.EarningEvents.Messages.Events;
 using SFA.DAS.Payments.Model.Core.Entities;
-
+ 
 namespace SFA.DAS.Payments.DataLocks.DataLockService
 {
     [StatePersistence(StatePersistence.Volatile)]
@@ -29,6 +29,7 @@ namespace SFA.DAS.Payments.DataLocks.DataLockService
         private readonly IApprenticeshipUpdatedProcessor apprenticeshipUpdatedProcessor;
         private readonly ITelemetry telemetry;
         private readonly Func<IApprenticeshipRepository> apprenticeshipRepository;
+        private readonly IGSLTrainingProcessor gslTrainingProcessor;
 
         public DataLockService(
             ActorService actorService,
@@ -39,6 +40,7 @@ namespace SFA.DAS.Payments.DataLocks.DataLockService
             IActorDataCache<List<long>> providers,
             IDataLockProcessor dataLockProcessor,
             IApprenticeshipUpdatedProcessor apprenticeshipUpdatedProcessor,
+            IGSLTrainingProcessor gslTrainingProcessor,
             ITelemetry telemetry
             )
             : base(actorService, actorId)
@@ -49,6 +51,7 @@ namespace SFA.DAS.Payments.DataLocks.DataLockService
             this.providers = providers ?? throw new ArgumentNullException(nameof(providers));
             this.dataLockProcessor = dataLockProcessor;
             this.apprenticeshipUpdatedProcessor = apprenticeshipUpdatedProcessor ?? throw new ArgumentNullException(nameof(apprenticeshipUpdatedProcessor));
+            this.gslTrainingProcessor = gslTrainingProcessor ?? throw new ArgumentNullException(nameof(gslTrainingProcessor));
             this.telemetry = telemetry ?? throw new ArgumentNullException(nameof(telemetry));
         }
 
@@ -60,6 +63,19 @@ namespace SFA.DAS.Payments.DataLocks.DataLockService
                 await Initialise().ConfigureAwait(false);
                 var dataLockEvents = await dataLockProcessor.GetPaymentEvents(message, cancellationToken);
                 telemetry.TrackDuration("DataLockService.HandleEarning", stopwatch, message);
+                telemetry.StopOperation(operation);
+                return dataLockEvents;
+            }
+        }
+
+        public async Task<List<DataLockEvent>> HandleGSLEarning(GSLApprenticeshipEarningsEvent message, CancellationToken cancellationToken)
+        {
+            using (var operation = telemetry.StartOperation("DataLockService.HandleGSLEarning", message.EventId.ToString()))
+            {
+                var stopwatch = Stopwatch.StartNew();
+                await Initialise().ConfigureAwait(false);
+                var dataLockEvents = await gslTrainingProcessor.Process(message, cancellationToken);
+                telemetry.TrackDuration("DataLockService.HandleGSLEarning", stopwatch, message);
                 telemetry.StopOperation(operation);
                 return dataLockEvents;
             }
